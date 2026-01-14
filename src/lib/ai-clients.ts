@@ -16,8 +16,8 @@ export async function generateText({ provider, apiKey, system, user, model }: Ge
         } else if (provider === 'gemini') {
             // Google Gemini REST API
             // Using gemini-pro as it's the stable model.
-            // Prepending system message because detailed systemInstruction support can be flaky in REST.
-            const effectiveModel = model.includes('gemini') ? model : 'gemini-pro';
+            // FORCE 'gemini-pro' to override any old/invalid 'gemini-1.5-flash' configs saved in nodes.
+            const effectiveModel = 'gemini-pro';
 
             // NOTE: 'gemini-pro' does NOT support systemInstruction via REST in some versions,
             // so we merge system + user to be safe.
