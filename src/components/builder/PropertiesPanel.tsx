@@ -219,7 +219,64 @@ export function PropertiesPanel({ selectedNode, setNodes, onClose, onDelete }: P
                         />
                     </div>
                 </div>
-            )
+            );
+        }
+
+        if (selectedNode.type === 'agent') {
+            return (
+                <div className="space-y-4">
+                    <div className="p-3 bg-violet-50 rounded border border-violet-100 flex gap-2 items-start">
+                        <Zap className="w-4 h-4 text-violet-600 mt-0.5" />
+                        <div className="text-xs text-violet-800">
+                            Configure AI Model and Prompts.
+                        </div>
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-500">Provider</label>
+                        <select
+                            className="w-full border rounded p-2 text-sm"
+                            value={config.provider || 'openai'}
+                            onChange={(e) => handleChange('provider', e.target.value)}
+                        >
+                            <option value="openai">OpenAI (GPT-4o)</option>
+                            <option value="gemini">Google Gemini</option>
+                        </select>
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-500">API Key</label>
+                        <input
+                            type="password"
+                            className="w-full border rounded p-2 text-sm font-mono"
+                            value={config.apiKey || ''}
+                            onChange={(e) => handleChange('apiKey', e.target.value)}
+                            placeholder="sk-..."
+                        />
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-500">System Message</label>
+                        <textarea
+                            className="w-full border rounded p-2 h-24 text-sm resize-none focus:ring-2 focus:ring-violet-500 outline-none"
+                            value={config.systemMessage || ''}
+                            onChange={(e) => handleChange('systemMessage', e.target.value)}
+                            placeholder="You are a helpful assistant..."
+                        />
+                    </div>
+
+                    <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-500">User Message</label>
+                        <textarea
+                            className="w-full border rounded p-2 h-20 text-sm resize-none focus:ring-2 focus:ring-violet-500 outline-none"
+                            value={config.userMessage || ''}
+                            onChange={(e) => handleChange('userMessage', e.target.value)}
+                            placeholder="{{last_message}}"
+                        />
+                        <p className="text-[10px] text-slate-400">Use {'{{variable}}'} to inject data.</p>
+                    </div>
+                </div>
+            );
         }
 
         return <div className="text-slate-400 text-sm italic text-center pt-10">Select a configurable node</div>;

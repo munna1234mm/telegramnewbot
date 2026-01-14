@@ -1,5 +1,6 @@
 import { TelegramClient } from './telegram';
 import { prisma } from './prisma';
+import { generateText } from './ai-clients';
 
 interface ExecutionContext {
     bot: any;
@@ -7,6 +8,7 @@ interface ExecutionContext {
     chatId: number;
     userName?: string;
     isCallback?: boolean;
+    agentResponse?: string;
 }
 
 interface ExecutionResult {
@@ -125,9 +127,11 @@ export class WorkflowEngine {
 
             if (!nextNode) break;
 
-            // Execute Actions
+            // Execute Actions & Agents
             if (nextNode.type === 'action') {
                 await this.executeAction(nextNode, context);
+            } else if (nextNode.type === 'agent') {
+                await this.executeAgent(nextNode, context);
             }
 
             node = nextNode;
@@ -145,6 +149,45 @@ export class WorkflowEngine {
         return false;
     }
 
+    private replaceVariables(text: string, context: ExecutionContext): string {
+        if (!text) return '';
+        let result = text;
+
+        // Replace {{agent_response}}
+        if (context.agentResponse) {
+            result = result.replace(/{{agent_response}}/g, context.agentResponse);
+        }
+
+        // Replace {{user_text}}
+        result = result.replace(/{{user_text}}/g, context.userText);
+
+        // Replace {{user_name}}
+        if (context.userName) {
+            result = result.replace(/{{user_name}}/g, context.userName);
+        }
+
+        return result;
+    }
+
+    private async executeAgent(node: any, context: ExecutionContext) {
+        const config = node.data.config || {};
+        this.logSteps.push(`Agent Generating... (${config.provider || 'openai'})`);
+
+        const systemMsg = this.replaceVariables(config.systemMessage || 'You are a helpful assistant.', context);
+        const userMsg = this.replaceVariables(config.userMessage || '{{user_text}}', context);
+
+        const response = await generateText({
+            provider: config.provider || 'openai',
+            apiKey: config.apiKey || '',
+            system: systemMsg,
+            user: userMsg,
+            model: config.model
+        });
+
+        context.agentResponse = response;
+        this.logSteps.push(`Agent Response: ${response.substring(0, 50)}...`);
+    }
+
     private async executeAction(node: any, context: ExecutionContext) {
         const config = node.data.config || {};
         const label = node.data.label || '';
@@ -159,7 +202,9 @@ export class WorkflowEngine {
                 });
                 options.reply_markup = { inline_keyboard };
             }
-            await this.client.sendMessage(context.chatId, config.message || 'No message configured', options);
+
+            const messageText = this.replaceVariables(config.message || 'No message configured', context);
+            await this.client.sendMessage(context.chatId, messageText, options);
         }
     }
 }

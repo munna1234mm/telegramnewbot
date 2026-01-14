@@ -130,3 +130,26 @@ export const ConditionNode = memo(({ data, selected }: any) => {
         </div>
     );
 });
+
+export const AgentNode = memo(({ data, selected }: any) => {
+    return (
+        <div className="relative">
+            <Handle type="target" position={Position.Top} className="!w-3 !h-3 !border-2 !border-white !bg-slate-400" />
+            <NodeWrapper
+                gradient="bg-gradient-to-r from-violet-600 to-purple-600"
+                title="AI Agent"
+                icon={Users} // Using Users for now, or we can add Bot to imports
+                selected={selected}
+            >
+                <div className="flex flex-col gap-2">
+                    <span className="font-semibold text-slate-800 text-sm">{data.label}</span>
+                    <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono bg-slate-50 p-1.5 rounded border border-slate-100">
+                        <span className="uppercase font-bold text-violet-600">{data.config?.provider || 'AI'}</span>
+                        <span>{data.config?.model || 'Default'}</span>
+                    </div>
+                </div>
+            </NodeWrapper>
+            <Handle type="source" position={Position.Bottom} className="!w-3 !h-3 !border-2 !border-white !bg-violet-500 shadow-sm" />
+        </div>
+    );
+});
