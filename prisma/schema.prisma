@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String?
+  email        String   @unique
+  passwordHash String
+  plan         String   @default("FREE")
+  createdAt    DateTime @default(now())
+  
+  bots         Bot[]
+}
+
+model Bot {
+  id           String   @id @default(uuid())
+  userId       String
+  name         String
+  username     String   @default("@bot")
+  token        String   // Encrypted token
+  webhookUrl   String?
+  status       String   @default("ACTIVE")
+  lastRun      DateTime?
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id])
+  workflows    Workflow[]
+  logs         ExecutionLog[]
+}
+
+model Workflow {
+  id             String   @id @default(uuid())
+  botId          String
+  name           String
+  enabled        Boolean  @default(false)
+  definitionJSON String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  bot            Bot      @relation(fields: [botId], references: [id])
+  logs           ExecutionLog[]
+}
+
+model ExecutionLog {
+  id         String   @id @default(uuid())
+  workflowId String?
+  botId      String
+  status     String
+  steps      String
+  error      String?
+  createdAt  DateTime @default(now())
+
+  workflow   Workflow? @relation(fields: [workflowId], references: [id])
+  bot        Bot       @relation(fields: [botId], references: [id])
+}
+
+model Template {
+  id             String   @id @default(uuid())
+  name           String
+  category       String
+  definitionJSON String
+  isPublic       Boolean  @default(true)
+}

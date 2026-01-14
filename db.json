@@ -1,0 +1,107 @@
+{
+  "bots": [
+    {
+      "id": "e5f04085-1dd4-4240-9ab5-00029ef76964",
+      "name": "My New Bot",
+      "username": "@new_bot",
+      "token": "8568291045:AAGUaaj04btt5j5VE3UfMK9RwGiByYeZ59E",
+      "status": "Active",
+      "workflows": 0,
+      "lastRun": "Never",
+      "createdAt": "2026-01-14T05:37:31.888Z",
+      "subscribers": [
+        "6787688428"
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "id": "e5f04085-1dd4-4240-9ab5-00029ef76964",
+      "botId": "e5f04085-1dd4-4240-9ab5-00029ef76964",
+      "nodes": [
+        {
+          "id": "102",
+          "type": "trigger",
+          "position": {
+            "x": -102.4743111797763,
+            "y": -58.82340716994533
+          },
+          "data": {
+            "label": "Command",
+            "config": {
+              "command": "/help"
+            }
+          },
+          "width": 200,
+          "height": 104,
+          "selected": false,
+          "dragging": false,
+          "positionAbsolute": {
+            "x": -102.4743111797763,
+            "y": -58.82340716994533
+          }
+        },
+        {
+          "id": "103",
+          "type": "condition",
+          "position": {
+            "x": -28.13897342912088,
+            "y": 108.74608301373536
+          },
+          "data": {
+            "label": "Keyword Match",
+            "config": {
+              "keywords": "hi"
+            }
+          },
+          "width": 200,
+          "height": 103,
+          "selected": true,
+          "positionAbsolute": {
+            "x": -28.13897342912088,
+            "y": 108.74608301373536
+          },
+          "dragging": false
+        }
+      ],
+      "edges": [
+        {
+          "source": "1",
+          "sourceHandle": null,
+          "target": "103",
+          "targetHandle": null,
+          "id": "reactflow__edge-1-103"
+        },
+        {
+          "source": "100",
+          "sourceHandle": null,
+          "target": "101",
+          "targetHandle": null,
+          "id": "reactflow__edge-100-101"
+        },
+        {
+          "source": "100",
+          "sourceHandle": null,
+          "target": "102",
+          "targetHandle": null,
+          "id": "reactflow__edge-100-102"
+        },
+        {
+          "source": "102",
+          "sourceHandle": null,
+          "target": "101",
+          "targetHandle": null,
+          "id": "reactflow__edge-102-101"
+        },
+        {
+          "source": "102",
+          "sourceHandle": null,
+          "target": "103",
+          "targetHandle": null,
+          "id": "reactflow__edge-102-103"
+        }
+      ],
+      "enabled": true
+    }
+  ]
+}
