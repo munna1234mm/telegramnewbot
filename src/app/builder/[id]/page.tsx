@@ -28,7 +28,7 @@ const nodeTypes = {
     condition: ConditionNode,
     agent: AgentNode,
 };
-};
+
 
 const initialNodes: Node[] = [
     { id: '1', position: { x: 400, y: 50 }, data: { label: '/start', config: { command: '/start' } }, type: 'trigger' },
